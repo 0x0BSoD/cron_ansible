@@ -7,7 +7,10 @@ from crontab import CronTab
 
 cron = CronTab(user=getpass.getuser())
 
-job = cron.new(command='python ' + os.path.abspath('runner.py'))
+w_dir = os.path.dirname(os.path.realpath(__file__))
+runner = os.path.abspath('runner.py')
+
+job = cron.new(command='cd {}; python {}'.format(w_dir, runner))
 
 try:
     action = sys.argv[1]
