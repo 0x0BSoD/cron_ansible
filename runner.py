@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
-from subprocess import Popen, PIPE
 import configparser
 import shlex
-
+import os
+import shutil
 import smtplib
+
+from subprocess import Popen, PIPE
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
 
 cfg = configparser.ConfigParser()
 cfg.read('conf.ini')
@@ -38,8 +41,12 @@ def send_mail(address, result, last_ten=None):
 
 def run_task(notify=False):
 
+    # Add shell=True and del shlex.split only if Popen not work (on macOS i.e)
     cmd = "ansible-playbook -i ansible/hosts ansible/init.yml"
-    p = Popen(shlex.split(cmd), stdout=PIPE, stderr=PIPE)
+    #p = Popen(shlex.split(cmd),
+    p = Popen(cmd,
+              shell=True,
+              stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
     p.wait()
     rc = p.returncode
@@ -53,11 +60,12 @@ def run_task(notify=False):
         print("="*15)
         print("ERROR!")
         print("="*15)
-
+        print(out.decode() + err.decode())
         result = False
 
     if notify: 
-        send_mail(e_cfg["address"], result, out.decode())
+        text = out.decode() + err.decode()
+        send_mail(e_cfg["address"], result, text)
 
 if __name__ == "__main__":
     run_task(notify=True)
