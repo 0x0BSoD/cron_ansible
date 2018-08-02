@@ -4,8 +4,18 @@
 
 Use vagrant or change ip and user in *ansible/hosts*
 
+Don't forget create and edit *conf.ini* file.
+
+```ini
+[email]
+from=
+address=
+password=
+smtp=
+port=    
 ```
+
+```bash
 chmod +x set_task.py
-pip install -r requirements.txt
 ./set_task.py {start | stop} # !! Stop remove all user cron tasks 
 ```
