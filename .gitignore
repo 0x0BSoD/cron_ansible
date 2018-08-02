@@ -1,0 +1,5 @@
+.vagrant
+.vscode
+.DS_Store
+*.retry
+conf.ini

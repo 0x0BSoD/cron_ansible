@@ -1,0 +1,31 @@
+- name: Install Apache2
+  yum:
+    name: httpd
+    state: present
+
+- name: Enable Apache2
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: change default Apache2 conf
+  lineinfile: 
+    dest: /etc/httpd/conf/httpd.conf
+    regexp: '^(.*)Listen 80(.*)$' 
+    line: 'Listen 127.0.0.1:8080'
+    backrefs: yes
+
+- name: Clean default configs
+  file:
+    path: /etc/httpd/conf.d/
+    state: absent
+
+- name: Push host configuration
+  copy: 
+    src: files/
+    dest: /etc/httpd/conf.d/ 
+    mode: 0640
+
+  notify:
+    - restart Apache2

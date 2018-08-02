@@ -1,0 +1,15 @@
+- name: Mkdir srv
+  file:
+    path: /srv/test
+    state: directory
+
+- name: Copy site to Hosts
+  copy: 
+    src: files/
+    dest: /srv/test
+    mode: 0755
+
+- name: because SELinux
+  shell: |
+    chcon -R -t httpd_sys_content_t /srv && \
+    setsebool -P httpd_can_network_connect 1

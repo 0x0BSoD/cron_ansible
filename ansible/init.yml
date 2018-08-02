@@ -1,0 +1,11 @@
+- hosts: webservers
+  roles:
+    - { role: all, become: yes }
+
+- hosts: apache
+  roles:
+    - { role: apache, become: yes }
+
+- hosts: nginx
+  roles:
+    - { role: nginx, become: yes }
